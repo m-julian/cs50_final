@@ -121,10 +121,6 @@ class Gui(QMainWindow):
         
         con = sqlite3.connect(DB_PATH)
 
-        print("in get data")
-        print(self.current_start_date)
-        print(self.current_end_date)
-
         # read in df from sql database between the two selected dates. Need to convert date because it is stored as datetime
         df = pd.read_sql(
             "SELECT * FROM usage WHERE DATE(date) BETWEEN DATE(?) AND DATE(?);",
@@ -133,8 +129,6 @@ class Gui(QMainWindow):
             params=(str(self.current_start_date), str(self.current_end_date)),
             parse_dates={"date": {"infer_datetime_format": True}},
         )
-        
-        print(df)
 
         daily_data_to_plot = []
         dates = df["date"].map(lambda t: t.date()).unique()
@@ -162,6 +156,8 @@ class Gui(QMainWindow):
         return daily_data_to_plot
 
     def plot_start_end_date(self):
+        """ Makes another window that displays the recorded information for the provided dates in a bar chart. If the end date is before
+        the start date, then a message is displayed which tells the user to pick a different time frame."""
         
         # only plot if the dates make sense otherwise dispay error box
         if self.current_end_date >= self.current_start_date:
@@ -174,7 +170,6 @@ class Gui(QMainWindow):
             QtWidgets.QMessageBox.about(
                 self, "", "Start date cannot be above end date. Please select another date range."
             )
-
 
     def export_excel_file(self):
         """ Exports excel file and makes charts based on time spent on pc each day"""
