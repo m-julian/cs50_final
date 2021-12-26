@@ -21,9 +21,9 @@ class Gui(QMainWindow):
         super().__init__()
 
         # Setup for ui
-        ui_path = Path(f"{PROGRAM_NAME}.ui")
+        ui_path = Path(__file__).parent / f"{PROGRAM_NAME}.ui"
         uic.loadUi(ui_path, self)
-        
+
         self.setWindowTitle(PROGRAM_NAME)
         # https://icon-icons.com/icon/clock/30023 , from user https://icon-icons.com/users/ImFp7tvsz65dSnmg9s2G2/icon-sets/
         self.setWindowIcon(QIcon("clock.png"))
@@ -36,6 +36,13 @@ class Gui(QMainWindow):
         self.show_plotter_button.clicked.connect(self.plot_start_end_date)
 
         # make minimum and maximum dates for calendars based on what is available in database
+        self.first_date_in_db_label.setText(
+            "First Date in Database: " + str(self.first_and_last_date_from_db[0].date())
+        )
+        self.last_date_in_db_label.setText(
+            "Last Date in Database: " + str(self.first_and_last_date_from_db[1].date())
+        )
+
         self.start_date_calendar.setMinimumDate(self.first_and_last_date_from_db[0])
         self.start_date_calendar.setMaximumDate(self.first_and_last_date_from_db[1])
         self.end_date_calendar.setMinimumDate(self.first_and_last_date_from_db[0])
@@ -45,15 +52,15 @@ class Gui(QMainWindow):
 
     @property
     def first_and_last_date_from_db(self) -> Tuple[datetime, datetime]:
-        
+
         con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         (first_date_in_db,) = cur.execute("""SELECT MIN(date) FROM usage""").fetchone()
         (last_date_in_db,) = cur.execute("""SELECT MAX(date) FROM usage""").fetchone()
-        
+
         first_date_in_db = datetime.fromisoformat(first_date_in_db)
         last_date_in_db = datetime.fromisoformat(last_date_in_db)
-        
+
         return first_date_in_db, last_date_in_db
 
     @property
@@ -118,7 +125,7 @@ class Gui(QMainWindow):
     def get_data_from_db(self) -> List[Tuple[date, int, int]]:
         """ Returns a list of tuples containing a date, how much time the user has actively used the pc on that date,
         and how much time the pc has stayed idle on that date."""
-        
+
         con = sqlite3.connect(DB_PATH)
 
         # read in df from sql database between the two selected dates. Need to convert date because it is stored as datetime
@@ -144,31 +151,38 @@ class Gui(QMainWindow):
             )
 
             # split the dataframe into user present and user absent
-            seconds_user_present = int(df_date_subset[df_date_subset["user_present"] == 1][
-                "time_present"
-            ].dt.seconds.sum())
-            seconds_user_absent = int(df_date_subset[df_date_subset["user_present"] == 0][
-                "time_present"
-            ].dt.seconds.sum())
-            
+            seconds_user_present = int(
+                df_date_subset[df_date_subset["user_present"] == 1][
+                    "time_present"
+                ].dt.seconds.sum()
+            )
+            seconds_user_absent = int(
+                df_date_subset[df_date_subset["user_present"] == 0][
+                    "time_present"
+                ].dt.seconds.sum()
+            )
+
             daily_data_to_plot.append((date, seconds_user_present, seconds_user_absent))
-            
+
         return daily_data_to_plot
 
     def plot_start_end_date(self):
         """ Makes another window that displays the recorded information for the provided dates in a bar chart. If the end date is before
         the start date, then a message is displayed which tells the user to pick a different time frame."""
-        
+
         # only plot if the dates make sense otherwise dispay error box
         if self.current_end_date >= self.current_start_date:
-        
+
             data = self.get_data_from_db()
-            widget = Plotter(self, data)
+            title = f"Data Range: {self.current_start_date} to {self.current_end_date}"
+            widget = Plotter(self, title, data)
             widget.show()
-            
+
         else:
             QtWidgets.QMessageBox.about(
-                self, "", "Start date cannot be above end date. Please select another date range."
+                self,
+                "",
+                "Start date cannot be above end date. Please select another date range.",
             )
 
     def export_excel_file(self):
@@ -181,7 +195,9 @@ class Gui(QMainWindow):
 
         else:
             QtWidgets.QMessageBox.about(
-                self, "", "Start date cannot be above end date. Please select another date range."
+                self,
+                "",
+                "Start date cannot be above end date. Please select another date range.",
             )
 
 
