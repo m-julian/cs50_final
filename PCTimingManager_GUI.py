@@ -12,8 +12,7 @@ import psutil
 from typing import Tuple, List
 from plotter import Plotter
 
-from config import DB_PATH, PROGRAM_NAME, PROGRAM_PATH
-
+from PCTimingManager_config import DB_PATH, PROGRAM_NAME, PROGRAM_PATH
 
 class Gui(QMainWindow):
     def __init__(self):
