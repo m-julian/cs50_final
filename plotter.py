@@ -54,9 +54,19 @@ class Plotter(QtWidgets.QMainWindow):
         return list(set([i.isocalendar()[1] for i in self.dates]))
 
     @property
+    def weeks_str(self) -> List[str]:
+        """ Returns a list of weeks as strfor which data has been recorded."""
+        return list(set([str(i) for i in self.weeks])) 
+
+    @property
     def months(self) -> List[int]:
         """ Returns a list of months for which data has been recorded. """
         return list(set([i.month for i in self.dates]))
+
+    @property
+    def months_str(self) -> List[str]:
+        """ Returns a list of weeks as strfor which data has been recorded."""
+        return list(set([str(i) for i in self.months])) 
 
     @property
     def time_active_weeks(self) -> List[int]:
@@ -169,36 +179,32 @@ class Plotter(QtWidgets.QMainWindow):
         """ Returns a list containing the percent of the time the user was not active (PC idle) in a certain month."""
         return [100 * (i/j) for i, j in zip(self.time_idle_weeks, self.total_time_weeks)]
 
-    def update_plot(self, active_list: List[int], idle_list: List[int], total_list: List[int] = None):
+    def update_plot(self, active_list: List[int], idle_list: List[int], total_list: List[int], x_axis_list: List[str]):
 
-        # # remove any widgets that were in that layout previously
+        # remove any widgets that were in that layout previously, so that charts to not stack but refresh instead
         prev_child_widget = self.chart_widget.findChild(QtChart.QChartView)
-        print(prev_child_widget)
         if prev_child_widget:
             self.plotter_layout.removeWidget(prev_child_widget)
 
         bar_series = QtChart.QBarSeries()
         active_set = QtChart.QBarSet("Active")
         idle_set = QtChart.QBarSet("Idle")
+        total_set = QtChart.QBarSet("Total")
 
         # append data to each bar set
         active_set.append(active_list)
         idle_set.append(idle_list)
-
+        total_set.append(total_list)
         bar_series.append(active_set)
         bar_series.append(idle_set)
+        bar_series.append(total_set)
         
         chart = QtChart.QChart()
         chart.addSeries(bar_series)
         chart.setTitle("Time spend on PC")
 
-        if total_list:
-            total_set = QtChart.QBarSet("Total")
-            total_set.append(total_list)
-            bar_series.append(total_set)
-
         x_axis = QtChart.QBarCategoryAxis()
-        x_axis.append(self.dates_str)
+        x_axis.append(x_axis_list)
         chart.addAxis(x_axis, Qt.AlignBottom)
         bar_series.attachAxis(x_axis)
         
@@ -217,22 +223,24 @@ class Plotter(QtWidgets.QMainWindow):
         """ Plots the chart with the required data"""
         
         if self.sender().text() == "Daily":
-            
             active_list  = [int(i/60) for i in self.time_active]
             idle_list = [int(i/60) for i in self.time_idle]
             total_list = [int(i/60) for i in self.total_pc_time]
-            self.update_plot(active_list, idle_list, total_list=total_list)
+            x_axis_list = self.dates_str
             
         elif self.sender().text() == "Weekly":
-            
             active_list  = [int(i/60) for i in self.time_active_weeks]
             idle_list = [int(i/60) for i in self.time_idle_weeks]
             total_list = [int(i/60) for i in self.total_time_weeks]
-            self.update_plot(active_list, idle_list, total_list=total_list)
+            x_axis_list = self.weeks_str
 
         elif self.sender().text() == "Monthly":
-            
             active_list  = [int(i/60) for i in self.time_active_months]
             idle_list = [int(i/60) for i in self.time_idle_months]
             total_list = [int(i/60) for i in self.total_time_months]
-            self.update_plot(active_list, idle_list, total_list=total_list)
+            x_axis_list = self.months_str
+            
+        else:
+            pass
+            
+        self.update_plot(active_list, idle_list, total_list, x_axis_list)
