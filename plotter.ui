@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QPushButton" name="daily_push_button">
       <property name="text">
-       <string>Daily </string>
+       <string>Daily</string>
       </property>
      </widget>
     </item>

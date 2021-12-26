@@ -179,7 +179,6 @@ class Gui(QMainWindow):
 
             data = self.get_data_from_db()
 
-
         else:
             QtWidgets.QMessageBox.about(
                 self, "", "Start date cannot be above end date. Please select another date range."
