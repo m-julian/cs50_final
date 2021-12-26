@@ -103,6 +103,20 @@
         </spacer>
        </item>
        <item>
+        <widget class="QLabel" name="first_date_in_db_label">
+         <property name="text">
+          <string>First Date In Database:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="last_date_in_db_label">
+         <property name="text">
+          <string>Last Date In Database:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="start_date_label">
          <property name="toolTip">
           <string>Choose start date from which to export to excel</string>
