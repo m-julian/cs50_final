@@ -4,7 +4,7 @@ import sqlite3
 from pathlib import Path
 import pandas as pd
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QFileDialog, QMainWindow
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
 import sys
@@ -12,6 +12,7 @@ import psutil
 from typing import Tuple, List
 from TimingManager_plotter import Plotter
 from TimingManager_config import DB_PATH, PROGRAM_NAME, PROGRAM_PATH
+import xlsxwriter
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -120,10 +121,9 @@ class Gui(QMainWindow):
             )
             self.exit()
 
-    def get_data_from_db(self) -> List[Tuple[date, int, int]]:
-        """ Returns a list of tuples containing a date, how much time the user has actively used the pc on that date,
-        and how much time the pc has stayed idle on that date."""
 
+    def read_database_into_df(self):
+        
         con = sqlite3.connect(DB_PATH)
 
         # read in df from sql database between the two selected dates. Need to convert date because it is stored as datetime
@@ -134,6 +134,15 @@ class Gui(QMainWindow):
             params=(str(self.current_start_date), str(self.current_end_date)),
             parse_dates={"date": {"infer_datetime_format": True}},
         )
+        
+        return df
+
+
+    def get_data_from_db(self) -> List[Tuple[date, int, int]]:
+        """ Returns a list of tuples containing a date, how much time the user has actively used the pc on that date,
+        and how much time the pc has stayed idle on that date."""
+
+        df = self.read_database_into_df()
 
         daily_data_to_plot = []
         dates = df["date"].map(lambda t: t.date()).unique()
@@ -189,7 +198,19 @@ class Gui(QMainWindow):
         # only plot if the dates make sense otherwise dispay error box
         if self.current_end_date >= self.current_start_date:
 
-            data = self.get_data_from_db()
+            df = self.read_database_into_df()
+            file_name, _ = QFileDialog.getSaveFileName(directory=str(Path.cwd()))
+            file_name = Path(file_name)
+            if file_name.suffix != ".xlsx":
+                file_name.suffix = ".xlsx"
+                
+            df.to_excel(file_name)
+            
+            QtWidgets.QMessageBox.about(
+                self,
+                "",
+                f"Dataframe written to excel file: {file_name}",
+            )
 
         else:
             QtWidgets.QMessageBox.about(
