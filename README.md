@@ -1,2 +1,2 @@
-# cs50_final
-cs50x final project
+# TimingManager - CS50x Final Project
+This is an application that tracks how much time a computer is being used or sitting idle. An SQLite database is used to record the data, after which it can be plotted into the application's GUI directly or exported into an Excel file for further analysis. 
