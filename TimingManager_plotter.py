@@ -225,6 +225,7 @@ class Plotter(QtWidgets.QMainWindow):
         bar_series.attachAxis(x_axis)
 
         y_axis = QtChart.QValueAxis()
+        y_axis.setTitleText("Time (Minutes)")
         chart.addAxis(y_axis, Qt.AlignLeft)
         bar_series.attachAxis(y_axis)
 
@@ -237,24 +238,26 @@ class Plotter(QtWidgets.QMainWindow):
 
     def plot_data(self):
         """ Plots the chart with the required data"""
+        
+        min_in_hour = 60
 
         if self.sender().text() == "Weekly":
-            active_list = [int(i / 60) for i in self.time_active_weeks]
-            idle_list = [int(i / 60) for i in self.time_idle_weeks]
-            total_list = [int(i / 60) for i in self.total_time_weeks]
+            active_list = [round(i / min_in_hour) for i in self.time_active_weeks]
+            idle_list = [round(i / min_in_hour) for i in self.time_idle_weeks]
+            total_list = [round(i / min_in_hour) for i in self.total_time_weeks]
             x_axis_list = self.weeks_str
 
         elif self.sender().text() == "Monthly":
-            active_list = [int(i / 60) for i in self.time_active_months]
-            idle_list = [int(i / 60) for i in self.time_idle_months]
-            total_list = [int(i / 60) for i in self.total_time_months]
+            active_list = [round(i / min_in_hour) for i in self.time_active_months]
+            idle_list = [round(i / min_in_hour) for i in self.time_idle_months]
+            total_list = [round(i / min_in_hour) for i in self.total_time_months]
             x_axis_list = self.months_str
 
         # use else statement for Daily in order to plot that in the beginning as well
         else:
-            active_list = [int(i / 60) for i in self.time_active]
-            idle_list = [int(i / 60) for i in self.time_idle]
-            total_list = [int(i / 60) for i in self.total_pc_time]
+            active_list = [round(i / min_in_hour) for i in self.time_active]
+            idle_list = [round(i / min_in_hour) for i in self.time_idle]
+            total_list = [round(i / min_in_hour) for i in self.total_pc_time]
             x_axis_list = self.dates_str
 
         self.update_plot(active_list, idle_list, total_list, x_axis_list)
