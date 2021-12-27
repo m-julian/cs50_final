@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>348</width>
-    <height>738</height>
+    <height>754</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,29 +22,6 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QLabel" name="program_description_label">
-         <property name="text">
-          <string>This is a small application which checks if a user is active on the PC at a specified time interval, after which it adds the result to a database. The data from the database can be exported to Excel or graped in the GUI.</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>280</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <widget class="QWidget" name="start_recording_widget" native="true">
          <property name="styleSheet">
           <string notr="true"/>
@@ -53,7 +30,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="start_recording_label">
             <property name="text">
-             <string>Record Time Spent on PC</string>
+             <string>Record Time Spent</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -177,10 +154,10 @@
           <string>Press to export data to excel file</string>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(170, 255, 127);</string>
+          <string notr="true">background-color:rgb(181, 143, 255)</string>
          </property>
          <property name="text">
-          <string>Export Time data to Excel</string>
+          <string>Export Data to Excel</string>
          </property>
         </widget>
        </item>
