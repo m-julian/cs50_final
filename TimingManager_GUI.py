@@ -16,7 +16,7 @@ from TimingManager_config import DB_PATH, PROGRAM_NAME, PROGRAM_PATH
 
 class Gui(QMainWindow):
     """TimingManager graphics user interface implementation."""
-    
+
     def __init__(self):
 
         super().__init__()

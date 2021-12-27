@@ -8,7 +8,7 @@ from typing import Tuple, List
 
 class Plotter(QtWidgets.QMainWindow):
     """Plotter implementation for Timing Manager GUI."""
-    
+
     def __init__(self, parent, title, data: List[Tuple[date, int, int]]):
 
         super().__init__(parent=parent)
