@@ -20,7 +20,7 @@ def make_database(db_path: Path):
 
 class User:
     """ Class used to record user status on the computer."""
-    
+
     def __init__(self):
         self.event = win32api.GetLastInputInfo()
 
