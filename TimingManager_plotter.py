@@ -14,7 +14,7 @@ class Plotter(QtWidgets.QMainWindow):
         self.title = title
 
         # load in UI
-        ui_path = Path(__file__).parent / "plotter.ui"
+        ui_path = Path(__file__).parent / "TimingManager_plotter.ui"
         uic.loadUi((str(ui_path)), self)
 
         self.setWindowTitle(title)

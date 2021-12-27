@@ -1,7 +1,7 @@
 from pathlib import Path
 import sqlite3
 import win32api
-from PCTimingManager_config import DB_PATH, TIME_BETWEEN_RECORDINGS
+from TimingManager_config import DB_PATH, TIME_BETWEEN_RECORDINGS
 from time import sleep
 
 

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 # GLOBAL_CONFIG
-PROGRAM_NAME = "PCTimingManager"
+PROGRAM_NAME = "TimingManager"
 DATABASE_NAME = PROGRAM_NAME + ".db"
 # create database Path object
 PROGRAM_PATH = (Path.cwd() / f"{PROGRAM_NAME}.exe").absolute()

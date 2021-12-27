@@ -3,16 +3,15 @@ from datetime import datetime, date
 import sqlite3
 from pathlib import Path
 import pandas as pd
-from qtpy import QtWidgets
-from qtpy.QtWidgets import QMainWindow
-from qtpy import uic
-from qtpy.QtGui import QIcon
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5 import uic
+from PyQt5.QtGui import QIcon
 import sys
 import psutil
 from typing import Tuple, List
-from plotter import Plotter
-
-from PCTimingManager_config import DB_PATH, PROGRAM_NAME, PROGRAM_PATH
+from TimingManager_plotter import Plotter
+from TimingManager_config import DB_PATH, PROGRAM_NAME, PROGRAM_PATH
 
 class Gui(QMainWindow):
     def __init__(self):
