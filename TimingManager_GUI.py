@@ -206,7 +206,7 @@ class Gui(QMainWindow):
             file_name, _ = QFileDialog.getSaveFileName(directory=str(Path.cwd()))
             file_name = Path(file_name)
             if file_name.suffix != ".xlsx":
-                file_name.suffix = ".xlsx"
+                file_name = file_name.with_suffix(".xlsx")
 
             df.to_excel(file_name)
 
