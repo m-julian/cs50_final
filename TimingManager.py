@@ -6,6 +6,7 @@ from time import sleep
 
 
 def make_database(db_path: Path):
+    """ Makes an SQLite database if one does not exist already."""
 
     if not db_path.exists():
         con = sqlite3.connect(db_path)
@@ -18,11 +19,13 @@ def make_database(db_path: Path):
 
 
 class User:
+    """ Class used to record user status on the computer."""
+    
     def __init__(self):
         self.event = win32api.GetLastInputInfo()
 
     def record_user_status(self, db_path: Path, user_status: bool):
-        """ Record if the user is on the pc or not."""
+        """ Record if the user is currently on the pc or not to the SQLite database."""
 
         con = sqlite3.connect(db_path)
         cur = con.cursor()
@@ -34,6 +37,8 @@ class User:
         con.close()
 
     def check_status_and_record(self):
+        """ Gets the Windows current event and checks if the previous one is the same. If it is, the computer is idle, otherwise it is active (the user
+        is actively using the computer)."""
         current_event = win32api.GetLastInputInfo()
 
         # if self.event == current_event, then user is away, so we want to record False
@@ -42,6 +47,7 @@ class User:
 
 
 def start_recording_user_status():
+    """ Records the current user status and appends result to SQLite database."""
 
     make_database(DB_PATH)
     user = User()
