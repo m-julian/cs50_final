@@ -25,6 +25,7 @@ class Plotter(QtWidgets.QMainWindow):
         self.daily_push_button.clicked.connect(self.plot_data)
         self.weekly_push_button.clicked.connect(self.plot_data)
         self.monthly_push_button.clicked.connect(self.plot_data)
+        self.yearly_push_button.clicked.connect(self.plot_data)
 
         # initialize plot
         self.plot_data()
@@ -74,6 +75,16 @@ class Plotter(QtWidgets.QMainWindow):
         return list(set([str(i) for i in self.months]))
 
     @property
+    def years(self) -> List[int]:
+        """ Returns a list of years for which data has been recorded. """
+        return list(set([i.year for i in self.dates])) 
+
+    @property
+    def years_str(self) -> List[int]:
+        """ Returns a list of years for which data has been recorded. """
+        return list(set([str(i) for i in self.years]))
+
+    @property
     def time_active_weeks(self) -> List[int]:
         """ Returns a list of time active (in seconds) every week that has been recorded so far."""
 
@@ -87,7 +98,7 @@ class Plotter(QtWidgets.QMainWindow):
                 if d.isocalendar()[1] == w:
                     weekly_time += self.time_active[idx]
 
-            active_time_for_week.append(int(weekly_time))
+            active_time_for_week.append(round(weekly_time))
 
         return active_time_for_week
 
@@ -105,7 +116,7 @@ class Plotter(QtWidgets.QMainWindow):
                 if d.isocalendar()[1] == w:
                     idle_weekly += self.time_idle[idx]
 
-            idle_time_for_week.append(int(idle_weekly))
+            idle_time_for_week.append(round(idle_weekly))
 
         return idle_time_for_week
 
@@ -128,7 +139,7 @@ class Plotter(QtWidgets.QMainWindow):
                 if d.month == m:
                     active_monthly += self.time_active[idx]
 
-            active_time_for_month.append(int(active_monthly))
+            active_time_for_month.append(round(active_monthly))
 
         return active_time_for_month
 
@@ -145,7 +156,7 @@ class Plotter(QtWidgets.QMainWindow):
                 # if the date falls is in this month, then add together the time for that date
                 if d.month == m:
                     idle_monthly += self.time_idle[idx]
-            idle_time_for_month.append(int(idle_monthly))
+            idle_time_for_month.append(round(idle_monthly))
 
         return idle_time_for_month
 
@@ -153,6 +164,47 @@ class Plotter(QtWidgets.QMainWindow):
     def total_time_months(self) -> List[int]:
         """ Returns a list of total time the PC has been on for every recorded week"""
         return [i + j for i, j in zip(self.time_active_months, self.time_idle_months)]
+
+    @property
+    def time_active_years(self) -> List[int]:
+        """ Returns a list of time active (in seconds) every year that has been recorded so far."""
+
+        active_time_for_year = []
+
+        for y in self.years:
+            active_yearly = 0
+
+            for idx, d in enumerate(self.dates):
+                # if the date falls is in this year, then add together the time for that date
+                if d.year == y:
+                    active_yearly += self.time_active[idx]
+
+            active_time_for_year.append(round(active_yearly))
+
+        return active_time_for_year
+
+    @property
+    def time_idle_years(self) -> List[int]:
+        """ Returns a list of time idle (in seconds) every year that has been recorded so far."""
+
+        idle_time_for_year = []
+
+        for y in self.years:
+            idle_yearly = 0
+
+            for idx, d in enumerate(self.dates):
+                # if the date falls is in this year, then add together the time for that date
+                if d.year == y:
+                    idle_yearly += self.time_idle[idx]
+
+            idle_time_for_year.append(round(idle_yearly))
+
+        return idle_time_for_year   
+
+    @property
+    def total_time_years(self) -> List[int]:
+        """ Returns a list of total time the PC has been on for every recorded week"""
+        return [i + j for i, j in zip(self.time_active_years, self.time_idle_years)]
 
     @property
     def percent_time_active_days(self) -> List[int]:
@@ -243,25 +295,31 @@ class Plotter(QtWidgets.QMainWindow):
     def plot_data(self):
         """ Plots the chart with the required data"""
 
-        min_in_hour = 60
+        sec_to_min = 60
 
         if self.sender().text() == "Weekly":
-            active_list = [round(i / min_in_hour) for i in self.time_active_weeks]
-            idle_list = [round(i / min_in_hour) for i in self.time_idle_weeks]
-            total_list = [round(i / min_in_hour) for i in self.total_time_weeks]
+            active_list = [round(i / sec_to_min) for i in self.time_active_weeks]
+            idle_list = [round(i / sec_to_min) for i in self.time_idle_weeks]
+            total_list = [round(i / sec_to_min) for i in self.total_time_weeks]
             x_axis_list = self.weeks_str
 
         elif self.sender().text() == "Monthly":
-            active_list = [round(i / min_in_hour) for i in self.time_active_months]
-            idle_list = [round(i / min_in_hour) for i in self.time_idle_months]
-            total_list = [round(i / min_in_hour) for i in self.total_time_months]
+            active_list = [round(i / sec_to_min) for i in self.time_active_months]
+            idle_list = [round(i / sec_to_min) for i in self.time_idle_months]
+            total_list = [round(i / sec_to_min) for i in self.total_time_months]
             x_axis_list = self.months_str
+
+        elif self.sender().text() == "Yearly":
+            active_list = [round(i / sec_to_min) for i in self.time_active_years]
+            idle_list = [round(i / sec_to_min) for i in self.time_idle_years]
+            total_list = [round(i / sec_to_min) for i in self.total_time_years]
+            x_axis_list = self.years_str
 
         # use else statement for Daily in order to plot that in the beginning as well
         else:
-            active_list = [round(i / min_in_hour) for i in self.time_active]
-            idle_list = [round(i / min_in_hour) for i in self.time_idle]
-            total_list = [round(i / min_in_hour) for i in self.total_pc_time]
+            active_list = [round(i / sec_to_min) for i in self.time_active]
+            idle_list = [round(i / sec_to_min) for i in self.time_idle]
+            total_list = [round(i / sec_to_min) for i in self.total_pc_time]
             x_axis_list = self.dates_str
 
         self.update_plot(active_list, idle_list, total_list, x_axis_list)
