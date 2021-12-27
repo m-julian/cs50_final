@@ -77,7 +77,7 @@ class Plotter(QtWidgets.QMainWindow):
     @property
     def years(self) -> List[int]:
         """ Returns a list of years for which data has been recorded. """
-        return list(set([i.year for i in self.dates])) 
+        return list(set([i.year for i in self.dates]))
 
     @property
     def years_str(self) -> List[int]:
@@ -199,7 +199,7 @@ class Plotter(QtWidgets.QMainWindow):
 
             idle_time_for_year.append(round(idle_yearly))
 
-        return idle_time_for_year   
+        return idle_time_for_year
 
     @property
     def total_time_years(self) -> List[int]:
