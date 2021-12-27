@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 from qtpy import uic
 from typing import Tuple, List
 
+
 class Plotter(QtWidgets.QMainWindow):
     def __init__(self, parent, title, data: List[Tuple[date, int, int]]):
 
@@ -238,7 +239,7 @@ class Plotter(QtWidgets.QMainWindow):
 
     def plot_data(self):
         """ Plots the chart with the required data"""
-        
+
         min_in_hour = 60
 
         if self.sender().text() == "Weekly":
