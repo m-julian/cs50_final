@@ -7,6 +7,8 @@ from typing import Tuple, List
 
 
 class Plotter(QtWidgets.QMainWindow):
+    """Plotter implementation for Timing Manager GUI."""
+    
     def __init__(self, parent, title, data: List[Tuple[date, int, int]]):
 
         super().__init__(parent=parent)
@@ -197,6 +199,7 @@ class Plotter(QtWidgets.QMainWindow):
         total_list: List[int],
         x_axis_list: List[str],
     ):
+        """ Makes a bar plot containing information of active, idle, and total time, after which it displays it in the GUI."""
 
         # remove any widgets that were in that layout previously, so that charts to not stack but refresh instead
         prev_child_widget = self.chart_widget.findChild(QtChart.QChartView)

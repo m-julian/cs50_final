@@ -15,6 +15,8 @@ from TimingManager_config import DB_PATH, PROGRAM_NAME, PROGRAM_PATH
 
 
 class Gui(QMainWindow):
+    """TimingManager graphics user interface implementation."""
+    
     def __init__(self):
 
         super().__init__()
@@ -51,6 +53,7 @@ class Gui(QMainWindow):
 
     @property
     def first_and_last_date_from_db(self) -> Tuple[datetime, datetime]:
+        """Returns a tuple of the first and last datetime currently recorded in the SQLite database."""
 
         con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
@@ -64,10 +67,12 @@ class Gui(QMainWindow):
 
     @property
     def current_start_date(self) -> date:
+        """Returns the date selected on the start data calendar."""
         return self.start_date_calendar.selectedDate().toPyDate()
 
     @property
     def current_end_date(self) -> date:
+        """Returns the date selected on the end date calendar."""
         return self.end_date_calendar.selectedDate().toPyDate()
 
     def start_recording_user_status(self):
@@ -121,7 +126,8 @@ class Gui(QMainWindow):
             )
             self.exit()
 
-    def read_database_into_df(self):
+    def read_database_into_df(self) -> pd.DataFrame:
+        """ Reads SQLite database into a dataframe and returns that dataframe for further processing."""
 
         con = sqlite3.connect(DB_PATH)
 
@@ -191,7 +197,7 @@ class Gui(QMainWindow):
             )
 
     def export_excel_file(self):
-        """ Exports excel file and makes charts based on time spent on pc each day"""
+        """ Exports excel file with database information for later analysis."""
 
         # only plot if the dates make sense otherwise dispay error box
         if self.current_end_date >= self.current_start_date:
