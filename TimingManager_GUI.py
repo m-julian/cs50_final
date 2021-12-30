@@ -204,15 +204,25 @@ class Gui(QMainWindow):
 
             df = self.read_database_into_df()
             file_name, _ = QFileDialog.getSaveFileName(directory=str(Path.cwd()))
-            file_name = Path(file_name)
-            if file_name.suffix != ".xlsx":
-                file_name = file_name.with_suffix(".xlsx")
+            
+            if file_name:
+            
+                file_name = Path(file_name)
+                if file_name.suffix != ".xlsx":
+                    file_name = file_name.with_suffix(".xlsx")
 
-            df.to_excel(file_name)
+                df.to_excel(file_name)
 
-            QtWidgets.QMessageBox.about(
-                self, "", f"Dataframe written to excel file: {file_name}",
-            )
+                QtWidgets.QMessageBox.about(
+                    self, "", f"Dataframe written to excel file: {file_name}",
+                )
+                
+            else:
+                QtWidgets.QMessageBox.about(
+                    self,
+                    "",
+                    "Please give a file name",
+                )
 
         else:
             QtWidgets.QMessageBox.about(
